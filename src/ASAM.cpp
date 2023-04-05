@@ -100,12 +100,10 @@ Type objective_function<Type>::operator() ()
   vector<Type> asc(Nage);                                         // ascending portions
   vector<Type> dsc(Nage);                                         // descending portions
   
-  vector<Type> q_t(Nyear);                                        // catchability per year
   matrix<Type> FM_ta(Nyear,Nage);                                 // instantaneous fishing mortality
   
   matrix<Type> N_ta(Nyear,Nage);                                  // Predicted abundance at age
   vector<Type> N_t(Nyear);                                        // Predicted abundance
-  matrix<Type> Nbar(Nyear,Nage);                                  // Nbar for pred fishery CPUE
   
   matrix<Type> CPUE_index_ta(Nyear,Nage);                         // Predicted catch per unit of effort (abundance index)
   vector<Type> CPUE_index(Nyear);                                 // Predicted catch per unit of effort (abundance index)
