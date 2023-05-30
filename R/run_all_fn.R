@@ -46,36 +46,34 @@ load(file.path(datadir, "pred_eff_NW_FL.RData"))
 
 
 
-# ###########################
-# ## Run Operating model ####
-# ###########################
+###########################
+## Run Operating model ####
+###########################
 # create parameters for operating models
 source(file.path(Rdir, "create_OM_input.R"))
-# additional functions
-source(file.path(Rdir, "extra_fn.R"))
-# # run initial operating model (set number of artificial reefs and no management strategy)
+# run initial operating model (set number of artificial reefs and no management strategy)
 source(file.path(Rdir, "run_init_OM.R"))
 # run operating model into future (create artificial reefs and use management strategies)
 source(file.path(Rdir, "run_future_OM.R"))
 
 
 
-# ############################
-# ## Run Estimation model ####
-# ############################
+############################
+## Run Estimation model ####
+############################
 # # create parameters for estimation model
 source(file.path(Rdir, "create_EM_data.R"))
 # run age-structured assessment model (estimation model)
 source(file.path(Rdir, "run_EM.R"))
 # compile ASAM
 compile(file.path(TMBdir, "ASAM.cpp"))
-dyn.load(dynlib(paste0(TMBdir,"/ASAM")))
+dyn.load(dynlib(paste0(TMBdir, "/ASAM")))
 
 
 
-# #############################
-# ## Run Management models ####
-# #############################
+#############################
+## Run Management models ####
+#############################
 # calculate reference point (for TAC)
 source(file.path(Rdir, "calc_ref.R"))
 # calculate total allowable catch (TAC) - for reference strategies
@@ -85,3 +83,11 @@ source(file.path(Rdir, "AR_rule.R"))
 # run overall MSE model
 source(file.path(Rdir, "run_MSE.R"))
 
+
+
+################################
+## Run additional functions ####
+################################
+# additional functions for models
+source(file.path(Rdir, "extra_fn.R"))
+# plot figures
