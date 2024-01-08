@@ -42,3 +42,6 @@ vignettes/*.pdf
 *.o
 *.dll
 *.so
+
+# scrap file
+scrap.r

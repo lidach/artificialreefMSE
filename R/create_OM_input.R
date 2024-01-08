@@ -71,69 +71,6 @@
 #' @param nseason specify number of sub-time periods per year; default=1
 #'
 
-#################################################
-## Input list for create_om_input R function ####
-#################################################
-input_list <- list(
-  amax = 20, # SEDAR 52
-  linf = 85.6, # SEDAR 52
-  vbk = 0.1919, # SEDAR 52
-  t0 = -0.3925, # SEDAR 52
-  M = c(2, 1.2, 0.19, 0.15, 0.129, 0.115, 0.106, 0.099, 0.095, 0.091, 0.088, 0.086, 0.085, 0.083, 0.082, 0.081, 0.081, 0.08, 0.08, 0.079, 0.078), # SEDAR 52
-  # M = 0.08, # SEDAR 52
-  lwa = 4.47e-04,
-  lwb = 2.994,
-  agefec = c(0, 0, 0.35E6, 2.62E6, 9.07E6, 20.3E6, 34.71E6, 49.95E6, 64.27E6, 76.76E6, 87.15E6, 95.53E6, 102.15E6, 107.3E6, 111.27E6, 114.3E6, 116.61E6, 118.36E6, 119.68E6, 120.67E6, 123.234591E6), # SEDAR 52
-  h = 0.99, # SEDAR 52
-  binwidth = 1,
-  start_ages = 0,
-  F_comm = 0.00082, # SEDAR 52 fleet 3 - LL (2016)
-  q = 0.00033, #
-  fi_q = 0.001,
-  ss_trip = 30,
-  s1 = 3.19257,
-  s2 = -0.84110,
-  s3 = -0.07316,
-  s4 = -0.21389,
-  s5 = -12.43890,
-  s6 = -4.45326,
-  fi_50 = 8.67398,
-  fi_slope = 2.45164,
-  persis = 0.5,
-  sig1e = 1,
-  sizemin = 40.64, # 16" regulation
-  max_eff = 1069073.6, # calculated from data
-  w_cost = 1,
-  ut_cpue = c(1.5, 20, 0.2397095), # tuned
-  ut_hpue = c(1.5, 25, 0.1726116), # tuned
-  ut_size = c(1.5, 0.02, 50.45908), # tuned
-  ut_dist = c(1.5, -0.006, 185.4731), # tuned
-  ut_crowd = c(1.5, -0.0009, 745.7763), # tuned
-  cv_len = 0.1,
-  cv_eff = 0.25,
-  sigma_c = 0.2,
-  sigma_i = 0.2,
-  sigma_r = 0.3,
-  sigma_fi = 0.3,
-  theta = 1,
-  theta_fi = 1,
-  w_dep = 1,
-  w_hab = 1,
-  w_dist = 1,
-  ar_flag = 0,
-  ar_prop_M = 0,
-  ar_prop_q = 0,
-  nr_flag = 1,
-  nr_prop_M = -0.25,
-  nr_prop_q = 0.25,
-  nseason = 1
-)
-
-
-
-################################
-## create_om_input function ####
-################################
 create_om_input <- function(input_list) {
   with(input_list, {
     ## Length at age
@@ -141,12 +78,10 @@ create_om_input <- function(input_list) {
     mids <- seq((binwidth / 2), linf * 1.3, by = binwidth) # midlength bins
     highs <- mids + (binwidth / 2) # length bins high
     lows <- mids - (binwidth / 2) # length bins low
-
     # length and weight at age
     ages <- seq(start_ages, to = (amax + 1 - (1 / nseason)), by = (1 / nseason)) # all ages including age at 0 if start_ages = 0 and seasonality
     la <- linf * (1 - exp(-vbk * (ages - t0))) # length at age
     wa <- lwa * la^lwb # weight at age
-
 
 
     ## Selectivity
@@ -166,16 +101,13 @@ create_om_input <- function(input_list) {
     # selectivity by age
     s_fa <- asc * (1 - jf1) + jf1 * ((1 - jf2) + jf2 * desc)
     s_fa <- s_fa / max(s_fa)
-
     # FI selectivity
     s_fi <- 1 / (1 + exp(-(ages - fi_50) / fi_slope))
     s_fi <- s_fi / max(s_fi)
-
     # retention
     ret_sigma <- cv_len * sizemin # get sd from CV
     ret <- pnorm((la - sizemin) / ret_sigma) # normal distribution of size limit
     ret <- ret / max(ret)
-
 
 
     ###################
