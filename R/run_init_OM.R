@@ -371,24 +371,24 @@ run_init_om <-
       eff_obs <- rnorm(length(model_years), mean = rowSums(eff_space[model_years, ]), sd = cv_eff * rowSums(eff_space[model_years, ]))
 
       ## age comps
-      age_comp <- array(NA, c(nyears, amax, nsites))
+      pa <- array(NA, c(nyears, amax, nsites))
       for (y in model_years) {
         for (k in 1:nsites) {
-          age_comp[y, , k] <- rmultinom(n = 1, size = ss_trip, prob = catch_numage[y, , k] / sum(catch_numage[y, , k]))
+          pa[y, , k] <- rmultinom(n = 1, size = ss_trip, prob = catch_numage[y, , k] / sum(catch_numage[y, , k]))
         }
       }
-      age_comp <- apply(X = age_comp[model_years, , ], MARGIN = c(1, 2), FUN = sum)
-      age_comp <- age_comp / rowSums(age_comp)
+      pa <- apply(X = pa[model_years, , ], MARGIN = c(1, 2), FUN = sum)
+      pa <- pa / rowSums(pa)
 
       ## age comps - FI
-      age_comp_fi <- array(NA, c(nyears, amax, nsites))
+      pa_fi <- array(NA, c(nyears, amax, nsites))
       for (y in model_years) {
         for (k in 1:nsites) {
-          age_comp_fi[y, , k] <- rmultinom(n = 1, size = ss_trip, prob = (s_fi * fi_q * nage[y, , k]) / sum(s_fi * fi_q * nage[y, , k]))
+          pa_fi[y, , k] <- rmultinom(n = 1, size = ss_trip, prob = (s_fi * fi_q * nage[y, , k]) / sum(s_fi * fi_q * nage[y, , k]))
         }
       }
-      age_comp_fi <- apply(X = age_comp_fi[model_years, , ], MARGIN = c(1, 2), FUN = sum)
-      age_comp_fi <- age_comp_fi / rowSums(age_comp_fi)
+      pa_fi <- apply(X = pa_fi[model_years, , ], MARGIN = c(1, 2), FUN = sum)
+      pa_fi <- pa_fi / rowSums(pa_fi)
 
 
       #################################
@@ -462,8 +462,8 @@ run_init_om <-
         pmax_eff_save = pmax_eff_save,
         catch_obs_save = catch_obs,
         cpue_index_save = cpue_index,
-        age_comp_save = age_comp,
-        age_comp_fi_save = age_comp_fi,
+        pa_save = pa,
+        pa_fi_save = pa_fi,
         recdev_save = recdev_save,
         ssb_ssbo_save = ssb_ssbo,
         ssb_save = ssb_save,
